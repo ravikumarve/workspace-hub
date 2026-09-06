@@ -1,17 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 /*
- * Workspace Hub — dark ops-console theme.
- * NOTE: keep custom rules inside @layer base so Tailwind utilities
- * (in @layer utilities) always win over them.
+ * Workspace Hub — Linear-app Operate theme.
+ * Tokens from open-design/linear-app DESIGN.md — dark-native, indigo accent, Inter Variable.
+ * NOTE: keep custom rules inside @layer base so Tailwind utilities win.
  */
+
 @layer base {
   :root {
     color-scheme: dark;
+    --linear-bg: #08090a;
+    --linear-panel: #0f1011;
+    --linear-surface: #191a1b;
+    --linear-ink: #f7f8f8;
+    --linear-ink-soft: #d0d6e0;
+    --linear-ink-muted: #8a8f98;
+    --linear-ink-faint: #62666d;
+    --linear-accent: #5e6ad2;
+    --linear-accent-violet: #7170ff;
+    --linear-accent-hover: #828fff;
+    --linear-border: rgba(255,255,255,0.08);
+    --linear-border-subtle: rgba(255,255,255,0.05);
+    --linear-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    /* Mission Control — tactical ops (for System Sentinel + Orchestrator) */
+    --mission-bg: #0B1120;
+    --mission-surface: #111827;
+    --mission-border: #1E3A5F;
+    --mission-data-primary: #FFB800;
+    --mission-data-secondary: #00D4FF;
+    --mission-data-critical: #FF4757;
+    --mission-fg-primary: #E8F0FE;
+    --mission-fg-secondary: #8BA3C7;
+    --mission-fg-tertiary: #4A6080;
+    --mission-mono: "JetBrains Mono", ui-monospace, monospace;
   }
 
+  html { font-feature-settings: "cv01", "ss03"; }
+
   body {
-    background-color: var(--color-zinc-950);
-    color: var(--color-zinc-100);
+    background-color: var(--linear-bg);
+    color: var(--linear-ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
+
+  ::selection { background: var(--linear-accent); color: #fff; }
+  :focus-visible { outline: 2px solid var(--linear-accent); outline-offset: 2px; }
 }

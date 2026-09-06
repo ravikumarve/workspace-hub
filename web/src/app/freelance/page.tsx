@@ -1,4 +1,5 @@
 import { ApiOffline, Card, PageHeader, SectionTitle } from "@/components/shell";
+import { FreelanceActions } from "@/components/workspace-actions";
 import { getJson } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -36,11 +37,13 @@ export default async function FreelancePage() {
         active="Freelance"
       />
 
+      <FreelanceActions />
+
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+          <div key={s.label} className="rounded-[8px] border border-[var(--linear-border)] bg-[rgba(255,255,255,0.02)] p-4">
             <div className={`text-3xl font-bold tabular-nums ${s.cls}`}>{s.value}</div>
-            <div className="mt-1 text-xs uppercase tracking-wide text-zinc-500">{s.label}</div>
+            <div className="mt-1 text-xs uppercase tracking-wide text-[var(--linear-ink-faint)]">{s.label}</div>
           </div>
         ))}
       </section>
@@ -49,11 +52,11 @@ export default async function FreelancePage() {
         <Card>
           <SectionTitle>Lead CSVs</SectionTitle>
           <table className="w-full text-left text-xs">
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-[var(--linear-border)]">
               {d.leads.map((l) => (
-                <tr key={l.file}>
-                  <td className="py-1.5 font-mono text-zinc-300">{l.file}</td>
-                  <td className="py-1.5 text-right tabular-nums text-zinc-400">{l.rows} rows</td>
+                <tr key={l.file} className="hover:bg-[rgba(255,255,255,0.02)]">
+                  <td className="py-1.5 font-mono text-[var(--linear-ink-soft)]">{l.file}</td>
+                  <td className="py-1.5 text-right tabular-nums text-[var(--linear-ink-faint)]">{l.rows} rows</td>
                 </tr>
               ))}
             </tbody>
@@ -63,21 +66,21 @@ export default async function FreelancePage() {
         <Card>
           <SectionTitle>Top Ranked Prospects (by reviews)</SectionTitle>
           <table className="w-full text-left text-xs">
-            <thead className="text-zinc-500">
+            <thead className="text-[var(--linear-ink-faint)]">
               <tr>
-                <th className="pb-2">Business</th>
-                <th className="pb-2">City</th>
-                <th className="pb-2 text-right">Rating</th>
-                <th className="pb-2 text-right">Reviews</th>
+                <th className="pb-2 font-medium">Business</th>
+                <th className="pb-2 font-medium">City</th>
+                <th className="pb-2 text-right font-medium">Rating</th>
+                <th className="pb-2 text-right font-medium">Reviews</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-[var(--linear-border)]">
               {d.ranked.map((r) => (
-                <tr key={`${r.name}-${r.place_id ?? r.city}`}>
-                  <td className="max-w-[180px] truncate py-1.5 pr-2 text-zinc-300">{r.name}</td>
-                  <td className="py-1.5 text-zinc-500">{r.city}</td>
-                  <td className="py-1.5 text-right tabular-nums">⭐ {r.rating}</td>
-                  <td className="py-1.5 text-right tabular-nums text-zinc-400">{r.review_count}</td>
+                <tr key={`${r.name}-${r.place_id ?? r.city}`} className="hover:bg-[rgba(255,255,255,0.02)]">
+                  <td className="max-w-[180px] truncate py-1.5 pr-2 text-[var(--linear-ink-soft)]">{r.name}</td>
+                  <td className="py-1.5 text-[var(--linear-ink-faint)]">{r.city}</td>
+                  <td className="py-1.5 text-right tabular-nums text-[var(--linear-ink)]">⭐ {r.rating}</td>
+                  <td className="py-1.5 text-right tabular-nums text-[var(--linear-ink-faint)]">{r.review_count}</td>
                 </tr>
               ))}
             </tbody>
@@ -86,15 +89,18 @@ export default async function FreelancePage() {
       </div>
 
       <Card>
-        <SectionTitle>Client Sites (live portfolio proof)</SectionTitle>
+        <SectionTitle>Client Sites (live portfolio proof) — click to open</SectionTitle>
         <div className="flex flex-wrap gap-2">
           {d.sites.map((s) => (
-            <span
+            <a
               key={s}
-              className="rounded-lg border border-zinc-800 bg-zinc-950/60 px-2.5 py-1.5 font-mono text-xs text-emerald-300"
+              href={`http://localhost:8787/api/source/freelance`}
+              target="_blank"
+              title="Open in Freelance folder — sites/*"
+              className="rounded-[6px] border border-[var(--linear-border)] bg-[var(--linear-panel)] px-2.5 py-1.5 font-mono text-xs text-emerald-300 hover:bg-[rgba(255,255,255,0.04)] hover:border-[var(--linear-accent)] transition-colors"
             >
               {s}
-            </span>
+            </a>
           ))}
         </div>
       </Card>

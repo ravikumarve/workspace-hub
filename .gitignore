@@ -2,6 +2,7 @@ data/hub.db
 web/node_modules
 web/.next
 web/.next.old
+web/.next.bak*
 __pycache__
 *.pyc
 .venv

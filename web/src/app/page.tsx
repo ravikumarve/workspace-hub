@@ -1,4 +1,5 @@
 import { Card, PageHeader, SectionTitle } from "@/components/shell";
+import { OverviewActions } from "@/components/workspace-actions";
 import { CONFIG } from "@/lib/config";
 import { getJson, tierBadge, type Overview } from "@/lib/api";
 
@@ -60,51 +61,58 @@ export default async function Home() {
         active="Overview"
       />
 
-      {/* Stat cards */}
+      <OverviewActions />
+
+      {/* Stat cards — Linear surface */}
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+          <div key={s.label} className="rounded-[8px] border border-[var(--linear-border)] bg-[rgba(255,255,255,0.02)] p-4">
             <div className={`text-3xl font-bold tabular-nums ${s.cls}`}>{s.value}</div>
-            <div className="mt-1 text-xs uppercase tracking-wide text-zinc-500">{s.label}</div>
+            <div className="mt-1 text-xs uppercase tracking-wide text-[var(--linear-ink-faint)]">{s.label}</div>
           </div>
         ))}
       </section>
 
-      {/* System sentinel + Staleness radar */}
+      {/* System sentinel — MISSION CONTROL tactical (amber telemetry on navy) */}
       <div className="grid gap-6 lg:grid-cols-2">
         {sys && (
-          <Card>
-            <SectionTitle>🩺 System Sentinel — Latitude 3460</SectionTitle>
+          <section className="rounded-[4px] border border-[var(--mission-border)] bg-[var(--mission-surface)] p-5">
+            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-[var(--mission-fg-secondary)]" style={{ letterSpacing: "0.08em" }}>
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--mission-data-primary)]" /> System Sentinel — Latitude 3460
+            </h2>
             <div className="space-y-3">
               {sys.disks.map((d) => (
                 <div key={d.mount}>
                   <div className="mb-1 flex justify-between text-xs">
-                    <span className="font-mono text-zinc-300">{d.mount}</span>
-                    <span className="tabular-nums text-zinc-500">
+                    <span className="font-mono text-[var(--mission-fg-secondary)]" style={{ fontFamily: "var(--mission-mono)" }}>{d.mount}</span>
+                    <span className="tabular-nums text-[var(--mission-fg-tertiary)]" style={{ fontFamily: "var(--mission-mono)" }}>
                       {d.free_gb}G free of {d.total_gb}G ({d.pct}%)
                     </span>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-[var(--mission-bg)] border border-[var(--mission-border)]">
                     <div
-                      className={`h-full rounded-full ${pctColor(d.pct)}`}
-                      style={{ width: `${Math.min(d.pct, 100)}%` }}
+                      className="h-full"
+                      style={{
+                        width: `${Math.min(d.pct, 100)}%`,
+                        background: d.pct >= 85 ? "var(--mission-data-critical)" : d.pct >= 75 ? "#FF9F43" : "var(--mission-data-primary)",
+                      }}
                     />
                   </div>
                 </div>
               ))}
-              <div className="flex flex-wrap gap-2 pt-1 text-xs">
-                <span className="rounded bg-zinc-800 px-2 py-1 text-zinc-300">
+              <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs" style={{ fontFamily: "var(--mission-mono)" }}>
+                <span className="rounded-[2px] border border-[var(--mission-border)] bg-[var(--mission-bg)] px-2 py-1 text-[var(--mission-data-primary)]">
                   RAM {sys.memory.used_gb}/{sys.memory.total_gb}G ({sys.memory.pct}%)
                 </span>
-                <span className="rounded bg-zinc-800 px-2 py-1 text-zinc-300">
+                <span className="rounded-[2px] border border-[var(--mission-border)] bg-[var(--mission-bg)] px-2 py-1 text-[var(--mission-fg-secondary)]">
                   load {sys.load.join(" · ")}
                 </span>
-                <span className="rounded bg-zinc-800 px-2 py-1 text-zinc-300">
-                  {sys.ports.length} ports listening
+                <span className="rounded-[2px] border border-[var(--mission-border)] bg-[var(--mission-bg)] px-2 py-1 text-[var(--mission-data-secondary)]">
+                  {sys.ports.length} ports
                 </span>
               </div>
             </div>
-          </Card>
+          </section>
         )}
 
         <Card>
@@ -117,18 +125,18 @@ export default async function Home() {
                 >
                   {s.tier}
                 </span>
-                <span className="font-medium text-zinc-200">{s.name}</span>
-                <span className="ml-auto tabular-nums text-zinc-500">
+                <span className="font-medium text-[var(--linear-ink)]">{s.name}</span>
+                <span className="ml-auto tabular-nums text-[var(--linear-ink-faint)]">
                   {s.days == null ? "no data" : `${s.days}d silent`}
                 </span>
               </li>
             ))}
             {data.stale.length === 0 && (
-              <li className="text-sm text-zinc-500">Nothing stale — everything touched in the last 30 days.</li>
+              <li className="text-sm text-[var(--linear-ink-muted)]">Nothing stale — everything touched in the last 30 days.</li>
             )}
           </ul>
           {data.parked_count > 0 && (
-            <p className="mt-3 text-[11px] text-zinc-600">
+            <p className="mt-3 text-[11px] text-[var(--linear-ink-faint)]">
               {data.parked_count} parked projects excluded (DO NOT TOUCH list)
             </p>
           )}
@@ -136,52 +144,52 @@ export default async function Home() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-5">
-        {/* Money List */}
-        <section className="lg:col-span-2 rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
+        {/* Money List — Linear */}
+        <Card className="lg:col-span-2">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--linear-ink-muted)]">
             💸 The Money List
           </h2>
           <ol className="space-y-2.5">
             {data.money_list.map((m) => (
               <li key={m.item_no} className="flex gap-2 text-sm leading-snug">
-                <span className="font-mono text-zinc-600">{m.item_no}.</span>
-                <span className="text-zinc-300">{m.text}</span>
+                <span className="font-mono text-[var(--linear-ink-faint)]">{m.item_no}.</span>
+                <span className="text-[var(--linear-ink-soft)]">{m.text}</span>
               </li>
             ))}
             {data.money_list.length === 0 && (
-              <li className="text-sm text-zinc-500">Money list not found in root AGENTS.md</li>
+              <li className="text-sm text-[var(--linear-ink-muted)]">Money list not found in root AGENTS.md</li>
             )}
           </ol>
-        </section>
+        </Card>
 
-        {/* Action Queue */}
-        <section className="lg:col-span-3 rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
+        {/* Action Queue — Linear */}
+        <Card className="lg:col-span-3">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--linear-ink-muted)]">
             ⚡ Action Queue — Next Turn Directives
           </h2>
           <ul className="space-y-3">
             {data.action_queue.map((a) => {
               const tb = tierBadge(a.tier);
               return (
-                <li key={a.name} className="rounded-lg border border-zinc-800/80 bg-zinc-950/60 p-3">
+                <li key={a.name} className="rounded-[6px] border border-[var(--linear-border)] bg-[var(--linear-panel)] p-3 hover:bg-[rgba(255,255,255,0.04)] transition-colors">
                   <div className="flex items-center gap-2">
                     <span className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase ${tb.cls}`}>
                       {a.tier}
                     </span>
-                    <span className="font-medium text-sm">{a.name}</span>
-                    <span className="ml-auto text-[11px] text-zinc-600">{a.ledger_date}</span>
+                    <span className="font-medium text-sm text-[var(--linear-ink)]">{a.name}</span>
+                    <span className="ml-auto text-[11px] text-[var(--linear-ink-faint)]">{a.ledger_date}</span>
                   </div>
-                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-zinc-400">
+                  <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-[var(--linear-ink-soft)]">
                     {a.next_directive}
                   </p>
                 </li>
               );
             })}
             {data.action_queue.length === 0 && (
-              <li className="text-sm text-zinc-500">No open directives — run a scan.</li>
+              <li className="text-sm text-[var(--linear-ink-muted)]">No open directives — run a scan.</li>
             )}
           </ul>
-        </section>
+        </Card>
       </div>
     </main>
   );

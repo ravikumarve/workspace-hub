@@ -188,6 +188,31 @@ def verify(name: str):
     return result
 
 
+@app.post("/api/actions/scan")
+def action_scan():
+    """Trigger a fresh scan — same as POST /api/scan but under /actions for UI consistency."""
+    return run_scan(verbose=False)
+
+
+@app.post("/api/actions/freelance/preview")
+def freelance_preview(limit: int = 3):
+    """Dry-run the injector for top leads — shows what would be generated, no files written."""
+    import subprocess, sys
+    from pathlib import Path as _P
+    freelance_root = _P(__file__).parent.parent.parent / "Freelance"
+    csv = freelance_root / "leads" / "ranked_prospects.csv"
+    if not csv.exists():
+        csv = freelance_root / "leads" / "gurgaon_fitness_master.csv"
+    try:
+        r = subprocess.run(
+            [sys.executable, str(freelance_root / "automation" / "template_injector.py"), "--csv", str(csv), "--out", "/tmp/ws-preview", "--limit", str(limit), "--dry-run"],
+            capture_output=True, text=True, timeout=15, cwd=str(freelance_root)
+        )
+        return {"ok": r.returncode == 0, "stdout": r.stdout[-2000:], "stderr": r.stderr[-1000:]}
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+
 @app.get("/api/overview")
 def overview():
     counts = q("SELECT tier, COUNT(*) AS n FROM projects GROUP BY tier")
