@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/*
+ * Workspace Hub — dark ops-console theme.
+ * NOTE: keep custom rules inside @layer base so Tailwind utilities
+ * (in @layer utilities) always win over them.
+ */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-zinc-950);
+    color: var(--color-zinc-100);
+  }
+}

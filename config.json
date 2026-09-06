@@ -1,0 +1,10 @@
+{
+  "stalenessDays": 30,
+  "scoreGate": 70,
+  "scoreWarnGate": 50,
+  "diskAmberPct": 75,
+  "diskRedPct": 85,
+  "timelineLimit": 80,
+  "timelineMaxLimit": 300,
+  "verifyTimeoutSec": 90
+}
